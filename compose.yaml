@@ -1,0 +1,14 @@
+services:
+  ia:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    # Red del host: el contenedor llega al servicio de metadatos de la EC2 (169.254.169.254) en un salto
+    # y boto3 obtiene las credenciales del rol LabRole sin ninguna clave. Publica el puerto 8000 del host.
+    network_mode: host
+    environment:
+      CASO: ${CASO:-rfm}
+      ENDPOINT: ${ENDPOINT:-}
+      UMBRAL: ${UMBRAL:-0.5}
+      AWS_DEFAULT_REGION: us-east-1
+    restart: unless-stopped
